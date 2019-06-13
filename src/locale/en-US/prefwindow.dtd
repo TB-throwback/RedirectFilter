@@ -1,0 +1,30 @@
+﻿<!ENTITY prefwindow.title "RedirectFilter options">
+<!ENTITY pane1.title "RedirectFilter options">
+<!ENTITY defaultOptionsIntro "It's default redirectfilter options. You can customize it in filter edit dialog.">
+<!ENTITY currentOptionsIntro "It's custom settings for redirect. You can choose defaults in addon setting dialog.">
+<!-- redirect options -->
+<!ENTITY checkKeepOriginalDate.label "Keep original message creation date">
+<!ENTITY checkKeepOriginalDate.accesskey "d">
+<!ENTITY checkCopyToSent.label "Save message copy to Sent folder">
+<!ENTITY checkCopyToSent.accesskey "S">
+<!ENTITY checkMarkAsForwarded.label "Mark message as forwarded">
+<!ENTITY checkMarkAsForwarded.accesskey "M">
+<!ENTITY mlistAccount.label "Account used to send message">
+<!ENTITY mlistAccount.useFolderOwnerAccount.lable "Use message-folder-owner account">
+<!ENTITY mlistAccount.useFolderOwnerAccount.description "Use the first account which root folder is similar to filtering folders root folder.">
+<!ENTITY mlistAccount.useDefaultAccount.lable "Use default account">
+<!ENTITY mlistAccount.useDefaultAccount.description "1) Tools-&gt;Account settings-&gt;Account actions-&gt;Set as default 2)Tools-&gt;Account settings-&gt;Outgoing server (SMTP)-&gt;Set default">
+<!ENTITY mlistAccount.useMsgHdrAccount.lable "Use account from message header">
+<!ENTITY mlistAccount.useMsgHdrAccount.description "Message keeps account it war recived to wherever you move or copy it. Use this account.">
+<!ENTITY tabMainSettings.label "Main">
+<!ENTITY tabMainSettings.accesskey "a">
+<!ENTITY tabHeadersSettings.label "Headers settings">
+<!ENTITY tabHeadersSettings.accesskey "H">
+<!ENTITY checkRedirectCCHeader.label "Redirect &quot;Copy To&quot; field (CC header)">
+<!ENTITY checkRedirectCCHeader.accesskey "C">
+<!ENTITY checkRedirectToHeader.label "Redirect &quot;To&quot; field (header)">
+<!ENTITY checkRedirectToHeader.accesskey "T">
+<!ENTITY checkRedirectSequencesHeaders.label "Redirect messages references to build chains of dialogs (headers In-Reply-To and References)">
+<!ENTITY checkRedirectSequencesHeaders.accesskey "">
+<!ENTITY checkChangeReplyToHeader.label "Change the address to reply (Reply-To header) to:">
+<!ENTITY checkChangeReplyToHeader.accesskey "t">

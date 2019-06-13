@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<?xml-stylesheet href='chrome://redirectfilter/skin/redirectfilter.css' type='text/css'?>
+<overlay id='redirectfilterFilterEditorOverlay'>
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="redirectfilter-strings" src="chrome://redirectfilter/locale/redirectfilter.properties"/>
+  </stringbundleset>
+</overlay>
+

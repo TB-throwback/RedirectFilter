@@ -1,0 +1,30 @@
+﻿<!ENTITY prefwindow.title "Настройки Redirect Filter">
+<!ENTITY pane1.title "Настройки Redirect Filter">
+<!ENTITY defaultOptionsIntro "Это настроки по-умолчанию. Вы можете настроить каждый фильтр отдельно в окне редактора фильра.">
+<!ENTITY currentOptionsIntro "Это настройки текущего фильтра. Настройки по-умолчанию задаются в настройках дополнения.">
+<!-- redirect options -->
+<!ENTITY checkKeepOriginalDate.label "Не изменять дату создания сообщения">
+<!ENTITY checkKeepOriginalDate.accesskey "д">
+<!ENTITY checkCopyToSent.label "Сохранять сообщение в отправленных">
+<!ENTITY checkCopyToSent.accesskey "С">
+<!ENTITY checkMarkAsForwarded.label "Отметить письмо как пересланое">
+<!ENTITY checkMarkAsForwarded.accesskey "О">
+<!ENTITY mlistAccount.label "Учетная запись для отправки сообщения">
+<!ENTITY mlistAccount.useFolderOwnerAccount.lable "Использовать аккаунт-владелец папки с письмом (по-умолчанию)">
+<!ENTITY mlistAccount.useFolderOwnerAccount.description "Берется первая учетная запись, корневая папка которой совпадает с корневой папкой обрабатываемой папки.">
+<!ENTITY mlistAccount.useDefaultAccount.lable "Использовать аккаунт по-умолчанию">
+<!ENTITY mlistAccount.useDefaultAccount.description "1) Инструменты-&gt;Параметры учетной записи-&gt;Действия для учетной записи-&gt;Использовать по-умолчанию 2)Инструменты-&gt;Параметры учетной записи-&gt;Сервер исходящей почты-&gt;По-умолчанию">
+<!ENTITY mlistAccount.useMsgHdrAccount.lable "Использовать аккаунт из заголовка письма">
+<!ENTITY mlistAccount.useMsgHdrAccount.description "При копировании-перемещении заголовок письма сохраняет информацию об учетной записи, на которую оно пришло изначально. Эта учетная запись и будет использоваться.">
+<!ENTITY tabMainSettings.label "Основные">
+<!ENTITY tabMainSettings.accesskey "н">
+<!ENTITY tabHeadersSettings.label "Настройки заголовков письма">
+<!ENTITY tabHeadersSettings.accesskey "з">
+<!ENTITY checkRedirectCCHeader.label "Перенаправлять поле &quot;Копия&quot; (заголовок CC)">
+<!ENTITY checkRedirectCCHeader.accesskey "К">
+<!ENTITY checkRedirectToHeader.label "Перенаправлять поле &quot;Кому&quot; (заголовок To)">
+<!ENTITY checkRedirectToHeader.accesskey "е">
+<!ENTITY checkRedirectSequencesHeaders.label "Перенаправлять связи писем для определения цепочек диалогов (заголовки In-Reply-To и References)">
+<!ENTITY checkRedirectSequencesHeaders.accesskey "ц">
+<!ENTITY checkChangeReplyToHeader.label "Заменить адрес для ответа (Reply-To заголовок) на:">
+<!ENTITY checkChangeReplyToHeader.accesskey "о">

@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!-- 
+/*
+ ***** BEGIN LICENSE BLOCK *****
+*
+ * ***** END LICENSE BLOCK *****
+ */
+-->
+<!DOCTYPE bindings SYSTEM "chrome://redirectfilter/locale/prefwindow.dtd">
+<bindings   id="redirectfilterBindings"
+            xmlns="http://www.mozilla.org/xbl"
+            xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+            xmlns:xbl="http://www.mozilla.org/xbl">
+
+  <!-- filter action bindings -->
+<binding id="redirect-settings" extends="chrome://messenger/content/searchWidgets.xml#ruleactiontarget-base">
+    <resources>
+      <stylesheet src="chrome://redirectfilter/skin/redirectfilter.css"/>
+    </resources>
+    <content>
+      <xul:hbox>
+        <xul:textbox class="ruleactionitem" newlines="pasteintact" anonid='thetextbox' onchange="onChange()" />
+        <xul:toolbarbutton image="chrome://redirectfilter/skin/settings.png"
+            class="focusbutton" tooltiptext="&pane1.title;" />
+      </xul:hbox>
+    </content>
+    <implementation>
+      <constructor>
+        <![CDATA[
+			let jsonPrefs;
+			try {
+				jsonPrefs = JSON.parse(this.hbox.value);
+				if (typeof(jsonPrefs.redirectTo) != "undefined")
+					this.textbox.value = jsonPrefs.redirectTo;
+			} catch(e) {
+				if (typeof(this.hbox.value) != "undefined")
+					this.textbox.value = this.hbox.value; // compatibility with previous version					
+			}
+			this.toolbarbutton.addEventListener("command", this.onCommand, false);
+			//this.textbox.addEventListener("change", this.onChange, false);
+        ]]>
+      </constructor>
+      <field name="hbox">document.getAnonymousNodes(this)[0]</field>
+      <field name="textbox">document.getAnonymousNodes(this)[0].childNodes[0]</field>
+      <field name="toolbarbutton">document.getAnonymousNodes(this)[0].childNodes[1]</field>
+      <method name="onCommand">
+        <body>
+          <![CDATA[
+            let hbox1 = this.parentNode;
+            window.openDialog("chrome://redirectfilter/content/redirprefs.xul", "",
+                              "chrome, dialog, modal, resizable=yes", hbox1);
+          ]]>
+        </body>
+      </method>
+      <method name="onChange">
+        <body>
+          <![CDATA[
+            let jsonPrefs;
+          	try {
+          		jsonPrefs = JSON.parse(this.hbox.value);
+          	} catch (e) {
+          		jsonPrefs = new Object();
+          	}
+          	jsonPrefs.redirectTo = this.textbox.value;
+          	let rawValue = JSON.stringify(jsonPrefs);
+          	this.hbox.value = rawValue;
+          	this.hbox.setAttribute("value", rawValue);
+          ]]>
+        </body>
+      </method>
+    </implementation>
+  </binding>
+  </bindings>

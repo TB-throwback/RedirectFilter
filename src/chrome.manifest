@@ -1,0 +1,7 @@
+content  redirectfilter   content/
+resource redirectfilter   content/
+locale   redirectfilter   ru-RU         locale/ru-RU/
+locale   redirectfilter   en-US         locale/en-US/
+skin     redirectfilter   classic/1.0   skin/
+overlay  chrome://messenger/content/messenger.xul chrome://redirectfilter/content/redirectfilter.xul
+overlay  chrome://messenger/content/FilterEditor.xul chrome://redirectfilter/content/filterEditorOverlay.xul

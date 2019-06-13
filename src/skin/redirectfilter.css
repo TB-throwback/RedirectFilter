@@ -1,0 +1,9 @@
+.ruleactiontarget[type="redirectfilter@irkit.ru#redirectto"] {
+	-moz-binding: url("chrome://redirectfilter/content/bindings.xml#redirect-settings");
+}
+.accountDescription{
+	visibility: collapse;
+}
+#useDefaultAccountDescription{ /*the longest description*/
+	visibility: hidden;
+}

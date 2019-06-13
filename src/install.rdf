@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+ xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>redirectfilter@irkit.ru</em:id>
+	<em:localized>
+      <Description>
+        <em:locale>ru-RU</em:locale>
+        <em:name>RedirectFilter</em:name>
+		<em:creator>Потёмкин Егор</em:creator>
+        <em:description>Действие перенаправить в фильтрах сообщений.</em:description>
+      </Description>
+    </em:localized>
+    <em:version>0.1.7</em:version>
+	<em:type>2</em:type>
+    <em:creator>Potiomkin Egor</em:creator>
+    <em:description>Redirect action in the filters.</em:description>
+    <em:name>RedirectFilter</em:name>
+    <em:homepageURL>http://www.irkit.ru/redirectfilter</em:homepageURL>
+    <em:optionsURL>chrome://redirectfilter/content/options.xul</em:optionsURL>
+     <!-- Thunderbird -->
+     <em:targetApplication>
+      <Description>
+        <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
+        <em:minVersion>3.0b3pre</em:minVersion>
+        <em:maxVersion>13.0a1</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+  </Description>
+</RDF>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/*
+ ***** BEGIN LICENSE BLOCK *****
+ *
+ * ***** END LICENSE BLOCK *****
+ */
+-->
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE dialog SYSTEM "chrome://redirectfilter/locale/prefwindow.dtd">
+<dialog title="&prefwindow.title;" orient="vertical" autostretch="always"
+        onload="onLoad();"
+        buttons="accept,cancel"
+        ondialogaccept="onAccept();"
+        style="width: 80ch"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/javascript" src="chrome://redirectfilter/content/redirprefs.js"/>
+  	<label value="&currentOptionsIntro;"/>
+		<tabbox>
+			<tabs>
+				<tab label="&tabMainSettings.label;" accesskey="&tabMainSettings.accesskey;"/>
+				<tab label="&tabHeadersSettings.label;" accesskey="&tabHeadersSettings.accesskey;"/>
+			</tabs>
+			<tabpanels>
+				<tabpanel id="mainsettingstab" orient="vertical">					
+					<checkbox id="checkCopyToSent"
+										  label="&checkCopyToSent.label;" accesskey="&checkCopyToSent.accesskey;"/>
+					<checkbox id="checkMarkAsForwarded"
+										  label="&checkMarkAsForwarded.label;" accesskey="&checkMarkAsForwarded.accesskey;"/>
+					<menulist id="mlistAccount" label="&mlistAccount.label;">
+						<menupopup>
+							<menuitem id="useFolderOwnerAccount" label="&mlistAccount.useFolderOwnerAccount.lable;" value="useFolderOwnerAccount" tooltiptext="&mlistAccount.useFolderOwnerAccount.description;"/>
+							<menuitem id="useDefaultAccount" label="&mlistAccount.useDefaultAccount.lable;" value="useDefaultAccount" tooltiptext="&mlistAccount.useDefaultAccount.description;"/>
+							<menuitem id="useMsgHdrAccount" label="&mlistAccount.useMsgHdrAccount.lable;" value="useMsgHdrAccount" tooltiptext="&mlistAccount.useMsgHdrAccount.description;"/>
+						</menupopup>
+					</menulist>
+				</tabpanel>
+				<tabpanel id="headerssettingstab" orient="vertical">
+					<checkbox id="checkKeepOriginalDate"
+										  label="&checkKeepOriginalDate.label;" accesskey="&checkKeepOriginalDate.accesskey;"/>
+					<checkbox id="checkRedirectToHeader"
+										  label="&checkRedirectToHeader.label;" accesskey="&checkRedirectToHeader.accesskey;"/>
+					<checkbox id="checkRedirectCCHeader"
+										  label="&checkRedirectCCHeader.label;" accesskey="&checkRedirectCCHeader.accesskey;"/>
+					<checkbox id="checkRedirectSequencesHeaders"
+										  label="&checkRedirectSequencesHeaders.label;" accesskey="&checkRedirectSequencesHeaders.accesskey;"/>
+					<checkbox id="checkChangeReplyToHeader"
+										  label="&checkChangeReplyToHeader.label;" accesskey="&checkChangeReplyToHeader.accesskey;"/>
+					<textbox id="textNewReplyToHeader" />
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+</dialog>

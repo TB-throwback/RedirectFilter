@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE prefwindow SYSTEM "chrome://redirectfilter/locale/prefwindow.dtd">
+<prefwindow id="redirectfilterPreferences"
+            xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+            title="&prefwindow.title;">
+	<script type="application/javascript" src="chrome://redirectfilter/content/options.js"/>
+	<prefpane id="pane1" label="&pane1.title;">
+		<preferences>
+			<preference id="keepOriginalDate" name="extensions.redirectfilter.keepOriginalDate.enabled" type="bool"/>
+			<preference id="redirectCCHeader" name="extensions.redirectfilter.redirectCCHeader.enabled" type="bool"/>
+			<preference id="redirectToHeader" name="extensions.redirectfilter.redirectToHeader.enabled" type="bool"/>
+			<preference id="redirectSequencesHeaders" name="extensions.redirectfilter.redirectSequencesHeaders.enabled" type="bool"/>
+			<preference id="changeReplyToHeader" name="extensions.redirectfilter.changeReplyToHeader.enabled" type="bool"/>
+			<preference id="newReplyToHeader" name="extensions.redirectfilter.newReplyToHeader" type="unichar"/>
+			<preference id="copyToSent" name="extensions.redirectfilter.copyToSent.enabled" type="bool"/>
+			<preference id="markAsForwarded" name="extensions.redirectfilter.markAsForwarded.enabled" type="bool"/> 			
+			<preference id="account" name="extensions.redirectfilter.account" type="string"/>	  
+		</preferences>
+		<label value="&defaultOptionsIntro;"/>
+		<tabbox>
+			<tabs>
+				<tab label="&tabMainSettings.label;" accesskey="&tabMainSettings.accesskey;"/>
+				<tab label="&tabHeadersSettings.label;" accesskey="&tabHeadersSettings.accesskey;"/>
+			</tabs>
+			<tabpanels>
+				<tabpanel id="mainsettingstab" orient="vertical">					
+					<checkbox id="checkCopyToSent" preference="copyToSent"
+										  label="&checkCopyToSent.label;" accesskey="&checkCopyToSent.accesskey;"/>
+					<checkbox id="checkMarkAsForwarded" preference="markAsForwarded"
+										  label="&checkMarkAsForwarded.label;" accesskey="&checkMarkAsForwarded.accesskey;"/>
+					<menulist id="mlistAccount" label="&mlistAccount.label;" preference="account">
+						<menupopup>
+							<menuitem label="&mlistAccount.useFolderOwnerAccount.lable;" value="useFolderOwnerAccount" tooltiptext="&mlistAccount.useFolderOwnerAccount.description;"/>
+							<menuitem label="&mlistAccount.useDefaultAccount.lable;" value="useDefaultAccount" tooltiptext="&mlistAccount.useDefaultAccount.description;"/>
+							<menuitem label="&mlistAccount.useMsgHdrAccount.lable;" value="useMsgHdrAccount" tooltiptext="&mlistAccount.useMsgHdrAccount.description;"/>
+						</menupopup>
+					</menulist>
+				</tabpanel>
+				<tabpanel id="headerssettingstab" orient="vertical">
+					<checkbox id="checkKeepOriginalDate" preference="keepOriginalDate"
+										  label="&checkKeepOriginalDate.label;" accesskey="&checkKeepOriginalDate.accesskey;"/>
+					<checkbox id="checkRedirectToHeader" preference="redirectToHeader"
+										  label="&checkRedirectToHeader.label;" accesskey="&checkRedirectToHeader.accesskey;"/>
+					<checkbox id="checkRedirectCCHeader" preference="redirectCCHeader"
+										  label="&checkRedirectCCHeader.label;" accesskey="&checkRedirectCCHeader.accesskey;"/>
+					<checkbox id="checkRedirectSequencesHeaders" preference="redirectSequencesHeaders"
+										  label="&checkRedirectSequencesHeaders.label;" accesskey="&checkRedirectSequencesHeaders.accesskey;"/>
+					<checkbox id="checkChangeReplyToHeader" preference="changeReplyToHeader"
+										  label="&checkChangeReplyToHeader.label;" accesskey="&checkChangeReplyToHeader.accesskey;"/>
+					<textbox id="textNewReplyToHeader" preference="newReplyToHeader" />
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</prefpane>
+</prefwindow>
