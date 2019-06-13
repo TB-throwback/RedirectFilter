@@ -20,8 +20,8 @@ function onLoad() {
 	// insert accounts to list
 	let am = Components.classes["@mozilla.org/messenger/account-manager;1"].getService(Components.interfaces.nsIMsgAccountManager);
 	let menupopupAccounts = document.getElementById("menupopupAccounts");
-	for (let i = 0; i < am.accounts.Count(); i++) { // go through all accounts and look for one that have root folder similar to first redirecting message root folder
-		let amacc = am.accounts.QueryElementAt(i, Ci.nsIMsgAccount);
+	for (let i = 0; i < am.accounts.length; i++) { // go through all accounts and look for one that have root folder similar to first redirecting message root folder
+		let amacc = am.accounts.queryElementAt(i, Ci.nsIMsgAccount);
 		try {
 			let newItem = createMenuItem(amacc.defaultIdentity.identityName,amacc.key,amacc.key);
 			menupopupAccounts.appendChild(newItem);

@@ -8,96 +8,96 @@ const Ci = Components.interfaces;
 let strings;
 
 //############### redirectRunner ##################
-let redirectRunner = function  () { // redirect action class	
+let redirectRunner = function  () { // redirect action class
 
-	// options	
+	// options
 	let options = new Array();
 	//// Load or set default options
-	let prefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService);
-	prefs = prefs.getBranch("extensions.redirectfilter.");
+	let prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+	//prefs = prefs.getBranch("extensions.redirectfilter.");
 	try {
-		options['keepOriginalDate'] = prefs.getBoolPref("keepOriginalDate.enabled");
+		options['keepOriginalDate'] = prefs.getBoolPref("extensions.redirectfilter.keepOriginalDate.enabled");
 	} catch (e) {
-		pref("extensions.redirectfilter.keepOriginalDate.enabled", false);
+		//pref("extensions.redirectfilter.keepOriginalDate.enabled", false);
 		options['keepOriginalDate'] = false;
 	}
 	try {
-		options['redirectCCHeader'] = prefs.getBoolPref("redirectCCHeader.enabled");
+		options['redirectCCHeader'] = prefs.getBoolPref("extensions.redirectfilter.redirectCCHeader.enabled");
 	} catch (e) {
-		pref("extensions.redirectfilter.redirectCCHeader.enabled", false);
+		//pref("extensions.redirectfilter.redirectCCHeader.enabled", false);
 		options['redirectCCHeader'] = false;
 	}
 	try {
-		options['redirectToHeader'] = prefs.getBoolPref("redirectToHeader.enabled");
+		options['redirectToHeader'] = prefs.getBoolPref("extensions.redirectfilter.redirectToHeader.enabled");
 	} catch (e) {
-		pref("extensions.redirectfilter.redirectToHeader.enabled", false);
+		//pref("extensions.redirectfilter.redirectToHeader.enabled", false);
 		options['redirectToHeader'] = false;
 	}
 	try {
-		options['redirectSequencesHeaders'] = prefs.getBoolPref("redirectSequencesHeaders.enabled");
+		options['redirectSequencesHeaders'] = prefs.getBoolPref("extensions.redirectfilter.redirectSequencesHeaders.enabled");
 	} catch (e) {
-		pref("extensions.redirectfilter.redirectSequencesHeaders.enabled", false);
+		//pref("extensions.redirectfilter.redirectSequencesHeaders.enabled", false);
 		options['redirectSequencesHeaders'] = false;
 	}
 	try {
-		options['copyToSent'] = prefs.getBoolPref("copyToSent.enabled");
+		options['copyToSent'] = prefs.getBoolPref("extensions.redirectfilter.copyToSent.enabled");
 	} catch (e) {
-		pref("extensions.redirectfilter.copyToSent.enabled", true);
+		//pref("extensions.redirectfilter.copyToSent.enabled", true);
 		options['copyToSent'] = true;
 	}
 	try {
-		options['markAsForwarded'] = prefs.getBoolPref("markAsForwarded.enabled");
+		options['markAsForwarded'] = prefs.getBoolPref("extensions.redirectfilter.markAsForwarded.enabled");
 	} catch (e) {
-		pref("extensions.redirectfilter.markAsForwarded.enabled", true);
+		//pref("extensions.redirectfilter.markAsForwarded.enabled", true);
 		options['markAsForwarded'] = true;
 	}
 	try {
-		options['account'] = prefs.getCharPref("account");
+		options['account'] = prefs.getCharPref("extensions.redirectfilter.account");
 	} catch (e) {
-		pref("extensions.redirectfilter.account", "useFolderOwnerAccount");
+		//pref("extensions.redirectfilter.account", "useFolderOwnerAccount");
 		options['account'] = "useFolderOwnerAccount";
 	}
 	try {
-		options['changeReplyToHeader'] = prefs.getBoolPref("changeReplyToHeader.enabled");
+		options['changeReplyToHeader'] = prefs.getBoolPref("extensions.redirectfilter.changeReplyToHeader.enabled");
 	} catch (e) {
-		pref("extensions.redirectfilter.changeReplyToHeader.enabled", false);
+		//pref("extensions.redirectfilter.changeReplyToHeader.enabled", false);
 		options['changeReplyToHeader'] = false;
 	}
 	try {
-		options['newReplyToHeader'] = prefs.getComplexValue("newReplyToHeader",Ci.nsISupportsString).data; // read utf8 string preference
+		options['newReplyToHeader'] = prefs.getComplexValue("extensions.redirectfilter.newReplyToHeader",Ci.nsISupportsString).data; // read utf8 string preference
 	} catch (e) {
-		pref("extensions.redirectfilter.newReplyToHeader", "");
+		//pref("extensions.redirectfilter.newReplyToHeader", "");
 		options['newReplyToHeader'] = "";
 	}
-		
+
 	// Activiti manager interfaces
 	const nsIAP = Ci.nsIActivityProcess;
 	const nsIAE = Ci.nsIActivityEvent;
 	const nsIAM = Ci.nsIActivityManager;
-	
+
 	let gActivityManager;
 	let process; // show redirection progress
 	let event; // show message
 	let messageCount;
 	let errorCount;
 	let currentMessageNum;
-	
+
 	// Queue param
 	//let currentlyInQueue;
 	//let maxQueueLength;
 	//let threadForWait;
 	//let canSendNext;
 	let msgQueue;
-	
+
 	// debug
 	let consoleService;
-	
+
 	// system new line
 	//let sysNewLine = ""; // The new line in Linux (Tested in Ubuntu) is \n. In windows it is \r\n. We need to use correct new line.
-	
+
 	// e-mail regexp for search in string
 	// it may be not the best regexp for email, but somehow more complexive regexp freeze process:(
-	// if you are going to change this regexp, change reg_email_only too UPD we dont need it any more (no email check in addon, serever will return error if something wrong) 
+	// if you are going to change this regexp, change reg_email_only too UPD we dont need it any more (no email check in addon, serever will return error if something wrong)
 	// let reg_email = /[A-Z0-9._%+-]+@[A-Z0-9.-]+/i;
 
 	// это локализация UPD инициализировано в redirectListener
@@ -106,8 +106,8 @@ let redirectRunner = function  () { // redirect action class
 	this.go = function (aMsgHdrs, aActionValue, aListener, aType, aMsgWindow) { // функция применения фильтра
 		// for debug
 		consoleService = Cc["@mozilla.org/consoleservice;1"].getService(Ci.nsIConsoleService);
-		
-		// load redirect params		
+
+		// load redirect params
 		try {
 			let jsonPrefs = JSON.parse(aActionValue);
 			for (attr in jsonPrefs) {
@@ -129,16 +129,16 @@ let redirectRunner = function  () { // redirect action class
 			} else {
 				debug(strings['errorRedirectToEmail']+":\n"+e);
 				return;
-			}				
+			}
 		}
-		
+
 		let messenger = Components.classes["@mozilla.org/messenger;1"].createInstance(Components.interfaces.nsIMessenger);
-		
+
 		let am = Components.classes["@mozilla.org/messenger/account-manager;1"].getService(Components.interfaces.nsIMsgAccountManager);
-		
+
 		let accountKey; // key of account (server) , from which send message
 		let msgIdentity; // identity (user) from which message is sending
-		
+
 		// statusbar var initiation
 		gActivityManager = Cc["@mozilla.org/activity-manager;1"].getService(nsIAM);
 		process = Cc["@mozilla.org/activity-process;1"].createInstance(nsIAP);
@@ -152,7 +152,7 @@ let redirectRunner = function  () { // redirect action class
 		gActivityManager.addActivity(process);
 		// lets go show that we are sending
 		process.setProgress(strings["redirected"] + " 0" +"\\"+messageCount, 0, 0);
-		
+
 		// queueing
 		//maxQueueLength = 1;
 		//currentlyInQueue = 0;
@@ -161,9 +161,9 @@ let redirectRunner = function  () { // redirect action class
                 //        .getService(Ci.nsIThreadManager)
                 //        .currentThread;
         	msgQueue = new Array();
-		
+
 		let msgSend; // message sender component instance
-		
+
 		if (options['account']=="useFolderOwnerAccount") {
 			msgIdentity = am.createIdentity();
 			let firstMsgHdr = aMsgHdrs.queryElementAt(0, Ci.nsIMsgDBHdr); // take the first message headers
@@ -253,7 +253,7 @@ let redirectRunner = function  () { // redirect action class
 								msgIdentity.copy(am.getAccount(accountKey).defaultIdentity);
 								msgIdentity.doFcc = options['copyToSent'];
 							}
-					
+
 							//consoleService.logStringMessage("point4 msgHdrX.author="+msgHdrX.author);
 							// Извлекаем чистый email из заголовка UPD не извлекаем, так как и без этого работает нормально.
 							/*let from_email;
@@ -265,31 +265,31 @@ let redirectRunner = function  () { // redirect action class
 								return;
 							}*/
 							//alert(from_email+" nnn "+msgHdrX[i].author);
-					
+
 							//параметры пересылки
 							let cf = Components.classes["@mozilla.org/messengercompose/composefields;1"].createInstance(Components.interfaces.nsIMsgCompFields); // new message headers and parameters to
 
 							cf.from = msgHdrX.author;
 							cf.to = mimeEncode(options["redirectTo"]);
-							
-					
-					
+
+
+
 							// временный файл для сообщения, создаются уникальные файлы во временной папке на основе шаблона имени
 							let file = Components.classes["@mozilla.org/file/directory_service;1"]. // file to save new message TODO send files from memory
 									getService(Components.interfaces.nsIProperties).
 										get("TmpD", Components.interfaces.nsIFile);
 							file.append("redirect.msg");
 							file.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
-						
+
 
 							// Поток для записи в файл
 							let foStream = Components.classes["@mozilla.org/network/file-output-stream;1"].
 										   createInstance(Components.interfaces.nsIFileOutputStream);
-					
+
 							try {
 								// write, create, truncate
 								foStream.init(file, 0x02 | 0x08 | 0x20, 0666, 0);
-						
+
 								let str = "";
 								let strRest = "";
 								let tempArr;
@@ -315,12 +315,12 @@ let redirectRunner = function  () { // redirect action class
 								if (newHdrs['Resent-from']==undefined) {
 									newHdrs['Resent-from'] = "Resent-from: "+msgIdentity.email;
 								}
-							
+
 								// change Reply-To header if option is set
-								if (options['changeReplyToHeader']) {							
+								if (options['changeReplyToHeader']) {
 									newHdrs['Reply-To'] = "Reply-To: "+mimeEncode(options['newReplyToHeader']);
 								}
-							
+
 								// take subject from header because subject in message source may be no actual.
 								// Other filter can change Subject (for example, filtaquilla) but it doesnot concerning message source
 								//consoleService.logStringMessage("subject from src newHdrs[Subject]="+newHdrs['Subject']);
@@ -332,7 +332,7 @@ let redirectRunner = function  () { // redirect action class
 								//if (msgHdrX.subject!=undefined) {
 								//	newHdrs['Subject'] = "Subject: "+msgHdrX.subject;
 								//}
-							
+
 
 								// lets write headers
 								let newHdrsStr = "";
@@ -345,7 +345,7 @@ let redirectRunner = function  () { // redirect action class
 								// lets handle body
 								let msgBody = handleNewLines(wholeString.substring(bodyBeginingIndex,wholeString.length));
 								foStream.write(msgBody, msgBody.length);
-								
+
 								// close stream
 								if (foStream instanceof Components.interfaces.nsISafeOutputStream) {
 									foStream.finish();
@@ -359,9 +359,9 @@ let redirectRunner = function  () { // redirect action class
 								return;
 							}
 							//return;
-					
+
 							// отправляем
-						
+
 							try {
 								//consoleService.logStringMessage("currentlyInQueue=");
 								/*while (!canSendNext) //while queue fo messages is full TODO now, i dont know why, canSendNext is GLOBAL and it meens that we have one queue for all redirection processes
@@ -371,9 +371,9 @@ let redirectRunner = function  () { // redirect action class
 								//consoleService.logStringMessage("accountKey="+accountKey);
 								//consoleService.logStringMessage("cf.subject="+cf.subject);
 								//consoleService.logStringMessage("msgHdrX.subject="+msgHdrX.subject);
-							
+
 								//consoleService.logStringMessage("file="+file);
-								//msgSend.NotifyListenerOnStopSending(0,null,"",null); 	
+								//msgSend.NotifyListenerOnStopSending(0,null,"",null);
 								// start sending message in background TODO create message queue. Now it send all simultaniosly
 								if (x == 0) { //send the first message
 									msgSend = Cc["@mozilla.org/messengercompose/send;1"].createInstance(Ci.nsIMsgSend);
@@ -405,7 +405,7 @@ let redirectRunner = function  () { // redirect action class
 						}
 					}
 				} (i, msgHdr)
-			}	
+			}
 			try {
 				MsgService.streamMessage(MessageURI,dataListener, {}, null, false, null);
 			} catch (e) {
@@ -417,12 +417,12 @@ let redirectRunner = function  () { // redirect action class
 		}
 		//consoleService.logStringMessage("Run loop complete");
 	}
-	
+
 	this.sendListener = { // обработка событий отправки
 		onStopSending: function(aMsgID, aStatus, aMsg, returnFileSpec) { // When sending complete TODO parse status, and ++errors count if there was an error while sending. Now aMsgID, aStatus, aMsg, returnFileSpec are null (because of thunderbird bug)
 			try {
 				currentMessageNum++;
-				let nextMessage = msgQueue.shift();		
+				let nextMessage = msgQueue.shift();
 				if (typeof(nextMessage) != 'undefined') { // lets change  progress status if its not the last message
 					if (errorCount>0) {
 						process.setProgress(strings["redirected"] + " " + currentMessageNum+"\\"+messageCount+" ("+errorCount+" "+strings["errors"]+".)",0,0);
@@ -436,7 +436,7 @@ let redirectRunner = function  () { // redirect action class
 					//Removing the process and adding an Event using Process' attributes
 					process.state = Components.interfaces.nsIActivityProcess.STATE_COMPLETED;
 					gActivityManager.removeActivity(process.id);
-					
+
 					// Выводим сообщение о завершении отправки
 					if (errorCount>0) {
 						event.init(strings["redirectioncomplete"], // aDisplayText
@@ -450,11 +450,11 @@ let redirectRunner = function  () { // redirect action class
 							strings["redirected"] + " " + currentMessageNum+"\\"+messageCount, // aDisplayText
 							process.startTime,  // start time
 							Date.now());        // completion time
-					}						
+					}
 
 					event.contextType = process.contextType; // optional
 					event.contextObj = process.contextObj;   // optional
-							
+
 					gActivityManager.addActivity(event); // show event
 				}
 			} finally {
@@ -489,7 +489,7 @@ let redirectRunner = function  () { // redirect action class
 		//Removing the process and adding an Event using Process' attributes
 		process.state = Components.interfaces.nsIActivityProcess.STATE_COMPLETED;
 		gActivityManager.removeActivity(process.id);
-		
+
 		// Выводим сообщение о завершении отправки
 		if (errorCount>0) {
 			event.init(strings["redirectioncomplete"], // aDisplayText
@@ -507,7 +507,7 @@ let redirectRunner = function  () { // redirect action class
 
 		event.contextType = process.contextType; // optional
 		event.contextObj = process.contextObj;   // optional
-				
+
 		gActivityManager.addActivity(event); // show event
 	};
 	let proceedHeaders = function (argstr) {
@@ -550,7 +550,7 @@ let redirectRunner = function  () { // redirect action class
 		try {
 			arghdrs['Subject'] = /^Subject\:.*(\r?\n\s+.+)*$/mi.exec(argstr)[0];
 		} catch (er) {}
-		
+
 		// MIME-Version
 		try {
 			arghdrs['MIME-Version'] = /^MIME-Version\:.*(\r?\n\s+.+)*$/mi.exec(argstr)[0];
@@ -578,7 +578,7 @@ let redirectRunner = function  () { // redirect action class
 	// argustr MUST NOT end with CR (\r) to not have badly modified end lines when strings will be concatinated
 		return argustr.replace(/\r?\n/mg,"\r\n"); // change all single \n (without previous \r) to \r\n
 	}
-	
+
 	let mimeEncode = function (utf8string) {
 		// append a UTF8 string to a mime-encoded subject
 		let mimeConvert = Cc["@mozilla.org/messenger/mimeconverter;1"]
@@ -599,7 +599,7 @@ let redirectRunner = function  () { // redirect action class
 		//consoleService.logStringMessage("decodedSubject="+decodedSubject);
 		return encodedString;
 	}
-	
+
 	let mergeSubject = function (subj1, subj2) { // subj1 from message source may not contain changes from other filter actions, subj2 from nsIMsgDBHdr doesnt contain Re: prefix (why?), so, we have to merge it
 		if (/^subject:\sre:\s/i.test(subj1) && !/^re:\s/i.test(subj2))
 			return /^Subject:\s(Re:\s)+/i.exec(subj1)[0]+subj2;
@@ -613,7 +613,7 @@ let redirectRunner = function  () { // redirect action class
 let redirectListener = function  () { // it listen for users called filter action and create instance of redirectRunner
 	//const Cc = Components.classes;
 	//const Ci = Components.interfaces;
-	
+
 	//let reg_email_only = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+$/i; //only email in string
 	//let reg_email_with_sign = /^.*<[A-Z0-9._%+-]+@[A-Z0-9.-]+>$/i; //email with previous string
 
@@ -633,7 +633,7 @@ let redirectListener = function  () { // it listen for users called filter actio
 	strings['actionname']=stringsObj.getString("redirectfilter.actionname");
 	strings['mustbeemail']=stringsObj.getString("redirectfilter.mustbeemail");
 	strings['errorRedirectToEmail']=stringsObj.getString("redirectfilter.errorRedirectToEmail");
-		
+
 	this.filter = { // это спец структура для создания фильтра
 		id: "redirectfilter@irkit.ru#redirectto", // UID, используется, кстати, в css
 		name: strings["actionname"], // Имя, берется в локализации
@@ -650,7 +650,7 @@ let redirectListener = function  () { // it listen for users called filter actio
 			//	return strings["mustbeemail"];
 			//}
 			return null;
-		}, 
+		},
 
 		allowDuplicates: true,
 		needsBody: false,

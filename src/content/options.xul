@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://messenger/skin/preferences/preferences.css" type="text/css"?>
 <!DOCTYPE prefwindow SYSTEM "chrome://redirectfilter/locale/prefwindow.dtd">
 <prefwindow id="redirectfilterPreferences"
 			onload="onLoad();"
@@ -16,8 +17,8 @@
 			<preference id="changeReplyToHeader" name="extensions.redirectfilter.changeReplyToHeader.enabled" type="bool"/>
 			<preference id="newReplyToHeader" name="extensions.redirectfilter.newReplyToHeader" type="unichar"/>
 			<preference id="copyToSent" name="extensions.redirectfilter.copyToSent.enabled" type="bool"/>
-			<preference id="markAsForwarded" name="extensions.redirectfilter.markAsForwarded.enabled" type="bool"/> 			
-			<preference id="account" name="extensions.redirectfilter.account" type="string"/>	  
+			<preference id="markAsForwarded" name="extensions.redirectfilter.markAsForwarded.enabled" type="bool"/>
+			<preference id="account" name="extensions.redirectfilter.account" type="string"/>
 		</preferences>
 		<label value="&defaultOptionsIntro;"/>
 		<tabbox>
@@ -26,7 +27,7 @@
 				<tab label="&tabHeadersSettings.label;" accesskey="&tabHeadersSettings.accesskey;"/>
 			</tabs>
 			<tabpanels>
-				<tabpanel id="mainsettingstab" orient="vertical">					
+				<tabpanel id="mainsettingstab" orient="vertical">
 					<checkbox id="checkCopyToSent" preference="copyToSent"
 										  label="&checkCopyToSent.label;" accesskey="&checkCopyToSent.accesskey;"/>
 					<checkbox id="checkMarkAsForwarded" preference="markAsForwarded"

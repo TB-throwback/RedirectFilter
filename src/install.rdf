@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
  xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
     <em:id>redirectfilter@irkit.ru</em:id>
@@ -11,7 +11,7 @@
         <em:description>Действие перенаправить в фильтрах сообщений.</em:description>
       </Description>
     </em:localized>
-    <em:version>0.1.8</em:version>
+    <em:version>0.1.9b1</em:version>
 	<em:type>2</em:type>
     <em:creator>Potiomkin Egor</em:creator>
     <em:description>Redirect action in the filters.</em:description>
@@ -23,7 +23,7 @@
       <Description>
         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
         <em:minVersion>3.0b3pre</em:minVersion>
-        <em:maxVersion>29.0</em:maxVersion>
+        <em:maxVersion>60.*</em:maxVersion>
       </Description>
     </em:targetApplication>
   </Description>
