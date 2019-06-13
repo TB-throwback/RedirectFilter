@@ -3,6 +3,7 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <!DOCTYPE prefwindow SYSTEM "chrome://redirectfilter/locale/prefwindow.dtd">
 <prefwindow id="redirectfilterPreferences"
+			onload="onLoad();"
             xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
             title="&prefwindow.title;">
 	<script type="application/javascript" src="chrome://redirectfilter/content/options.js"/>
@@ -31,10 +32,10 @@
 					<checkbox id="checkMarkAsForwarded" preference="markAsForwarded"
 										  label="&checkMarkAsForwarded.label;" accesskey="&checkMarkAsForwarded.accesskey;"/>
 					<menulist id="mlistAccount" label="&mlistAccount.label;" preference="account">
-						<menupopup>
-							<menuitem label="&mlistAccount.useFolderOwnerAccount.lable;" value="useFolderOwnerAccount" tooltiptext="&mlistAccount.useFolderOwnerAccount.description;"/>
-							<menuitem label="&mlistAccount.useDefaultAccount.lable;" value="useDefaultAccount" tooltiptext="&mlistAccount.useDefaultAccount.description;"/>
-							<menuitem label="&mlistAccount.useMsgHdrAccount.lable;" value="useMsgHdrAccount" tooltiptext="&mlistAccount.useMsgHdrAccount.description;"/>
+						<menupopup id='menupopupAccounts'>
+							<menuitem id="useFolderOwnerAccount" label="&mlistAccount.useFolderOwnerAccount.lable;" value="useFolderOwnerAccount" tooltiptext="&mlistAccount.useFolderOwnerAccount.description;"/>
+							<menuitem id="useDefaultAccount" label="&mlistAccount.useDefaultAccount.lable;" value="useDefaultAccount" tooltiptext="&mlistAccount.useDefaultAccount.description;"/>
+							<menuitem id="useMsgHdrAccount" label="&mlistAccount.useMsgHdrAccount.lable;" value="useMsgHdrAccount" tooltiptext="&mlistAccount.useMsgHdrAccount.description;"/>
 						</menupopup>
 					</menulist>
 				</tabpanel>

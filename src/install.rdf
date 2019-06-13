@@ -11,7 +11,7 @@
         <em:description>Действие перенаправить в фильтрах сообщений.</em:description>
       </Description>
     </em:localized>
-    <em:version>0.1.7</em:version>
+    <em:version>0.1.8</em:version>
 	<em:type>2</em:type>
     <em:creator>Potiomkin Egor</em:creator>
     <em:description>Redirect action in the filters.</em:description>
@@ -23,7 +23,7 @@
       <Description>
         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
         <em:minVersion>3.0b3pre</em:minVersion>
-        <em:maxVersion>13.0a1</em:maxVersion>
+        <em:maxVersion>29.0</em:maxVersion>
       </Description>
     </em:targetApplication>
   </Description>

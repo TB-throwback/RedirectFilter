@@ -97,8 +97,8 @@ let redirectRunner = function  () { // redirect action class
 	
 	// e-mail regexp for search in string
 	// it may be not the best regexp for email, but somehow more complexive regexp freeze process:(
-	// if you are going to change this regexp, change reg_email_only too
-	let reg_email = /[A-Z0-9._%+-]+@[A-Z0-9.-]+/i;
+	// if you are going to change this regexp, change reg_email_only too UPD we dont need it any more (no email check in addon, serever will return error if something wrong) 
+	// let reg_email = /[A-Z0-9._%+-]+@[A-Z0-9.-]+/i;
 
 	// это локализация UPD инициализировано в redirectListener
 	//let strings = window.document.getElementById("redirectfilter-strings");
@@ -167,8 +167,8 @@ let redirectRunner = function  () { // redirect action class
 		if (options['account']=="useFolderOwnerAccount") {
 			msgIdentity = am.createIdentity();
 			let firstMsgHdr = aMsgHdrs.queryElementAt(0, Ci.nsIMsgDBHdr); // take the first message headers
-			for (let i = 0; i < am.accounts.Count(); i++) { // go through all accounts and look for one that have root folder similar to first redirecting message root folder
-				let amacc = am.accounts.QueryElementAt(i, Ci.nsIMsgAccount);
+			for (let i = 0; i < am.accounts.length; i++) { // go through all accounts and look for one that have root folder similar to first redirecting message root folder
+				let amacc = am.accounts.queryElementAt(i, Ci.nsIMsgAccount);
 				if (amacc.incomingServer.rootFolder == firstMsgHdr.folder.rootFolder) {
 					msgIdentity.copy(amacc.defaultIdentity);
 					accountKey = amacc.key;
@@ -185,12 +185,23 @@ let redirectRunner = function  () { // redirect action class
 			msgIdentity.copy(am.defaultAccount.defaultIdentity);
 			accountKey = am.defaultAccount.key;
 			msgIdentity.doFcc = options['copyToSent'];
+		} else if (options['account'].substring(0,7)=="account") { // use selected account
+			msgIdentity = am.createIdentity();
+			try {
+				msgIdentity.copy(am.getAccount(options['account']).defaultIdentity);
+				accountKey = options['account'];
+				msgIdentity.doFcc = options['copyToSent'];
+			} catch (e) {
+				debug(strings["errorAccountNotExists"]+":\n"+e);
+				stopSending();
+				return;
+			}
 		}
 
 		for (let i = 0; i < aMsgHdrs.length; i++) { // sendin loop
 			let redRunner = this;
 			//let i=it;
-			let aMsgHdrsF=aMsgHdrs;
+			//let aMsgHdrsF=aMsgHdrs;
 			//let forLoop = function (i, aMsgHdrs) {
 			// хедеры исходного сообщения
 			let msgHdr = aMsgHdrs.queryElementAt(i, Ci.nsIMsgDBHdr);
@@ -228,153 +239,169 @@ let redirectRunner = function  () { // redirect action class
 				},
 				onStopRequest: function(x, msgHdrX) {
 					return function () {
-						//consoleService.logStringMessage("point3 msgHdrX.author="+msgHdrX.author);
-						//consoleService.logStringMessage("COMPLETE onStopRequest, length="+wholeString.length);
-						//consoleService.logStringMessage("x="+x);
-						//consoleService.logStringMessage("msgHdrX.author="+msgHdrX.author);
-						//consoleService.logStringMessage("cntr="+cnt);
-						//return;
-
-						if (options['account']=="useMsgHdrAccount") { // take account and its default identity from message header
-							msgIdentity = am.createIdentity();
-							accountKey = msgHdrX.accountKey;
-							msgIdentity.copy(am.getAccount(accountKey).defaultIdentity);
-							msgIdentity.doFcc = options['copyToSent'];
-						}
-					
-						//consoleService.logStringMessage("point4 msgHdrX.author="+msgHdrX.author);
-						// Извлекаем чистый email из заголовка
-						let from_email;
-						try { from_email = reg_email.exec(msgHdrX.author)[0];}
-						catch(e) {
-							errorCount++;
-							debug(strings["errorParsingAuthorEmail"]+"\nmsgHdrX.author="+msgHdrX.author+"\n"+e)
-							stopSending();
-							return;
-						}
-						//alert(from_email+" nnn "+msgHdrX[i].author);
-					
-						//параметры пересылки
-						let cf = Components.classes["@mozilla.org/messengercompose/composefields;1"].createInstance(Components.interfaces.nsIMsgCompFields); // new message headers and parameters to
-
-						cf.from = from_email;
-						cf.to = mimeEncode(options["redirectTo"]);
-						cf.subject = msgHdrX.subject;
-					
-					
-						// временный файл для сообщения, создаются уникальные файлы во временной папке на основе шаблона имени
-						let file = Components.classes["@mozilla.org/file/directory_service;1"]. // file to save new message TODO send files from memory
-								getService(Components.interfaces.nsIProperties).
-									get("TmpD", Components.interfaces.nsIFile);
-						file.append("redirect.msg");
-						file.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
-						
-
-						// Поток для записи в файл
-						let foStream = Components.classes["@mozilla.org/network/file-output-stream;1"].
-									   createInstance(Components.interfaces.nsIFileOutputStream);
-					
 						try {
-							// write, create, truncate
-							foStream.init(file, 0x02 | 0x08 | 0x20, 0666, 0);
+							//consoleService.logStringMessage("point3 msgHdrX.author="+msgHdrX.author);
+							//consoleService.logStringMessage("COMPLETE onStopRequest, length="+wholeString.length);
+							//consoleService.logStringMessage("x="+x);
+							//consoleService.logStringMessage("msgHdrX.author="+msgHdrX.author);
+							//consoleService.logStringMessage("cntr="+cnt);
+							//return;
+
+							if (options['account']=="useMsgHdrAccount") { // take account and its default identity from message header
+								msgIdentity = am.createIdentity();
+								accountKey = msgHdrX.accountKey;
+								msgIdentity.copy(am.getAccount(accountKey).defaultIdentity);
+								msgIdentity.doFcc = options['copyToSent'];
+							}
+					
+							//consoleService.logStringMessage("point4 msgHdrX.author="+msgHdrX.author);
+							// Извлекаем чистый email из заголовка UPD не извлекаем, так как и без этого работает нормально.
+							/*let from_email;
+							try { from_email = reg_email.exec(msgHdrX.author)[0];}
+							catch(e) {
+								errorCount++;
+								debug(strings["errorParsingAuthorEmail"]+"\nmsgHdrX.author="+msgHdrX.author+"\n"+e)
+								stopSending();
+								return;
+							}*/
+							//alert(from_email+" nnn "+msgHdrX[i].author);
+					
+							//параметры пересылки
+							let cf = Components.classes["@mozilla.org/messengercompose/composefields;1"].createInstance(Components.interfaces.nsIMsgCompFields); // new message headers and parameters to
+
+							cf.from = msgHdrX.author;
+							cf.to = mimeEncode(options["redirectTo"]);
+							
+					
+					
+							// временный файл для сообщения, создаются уникальные файлы во временной папке на основе шаблона имени
+							let file = Components.classes["@mozilla.org/file/directory_service;1"]. // file to save new message TODO send files from memory
+									getService(Components.interfaces.nsIProperties).
+										get("TmpD", Components.interfaces.nsIFile);
+							file.append("redirect.msg");
+							file.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
 						
-							let str = "";
-							let strRest = "";
-							let tempArr;
-							let bodyBeginingIndex;
-							// Считываем по порциям
-							bodyBeginingIndex = wholeString.search(/(\r?\n){2,}/mg);
 
-							// BODY begining in strRest, extract and proceed the last headers
-							//let newHdrs = new Object(); //Array of created message headers
-							let newHdrs = proceedHeaders(wholeString.substring(0,bodyBeginingIndex));
+							// Поток для записи в файл
+							let foStream = Components.classes["@mozilla.org/network/file-output-stream;1"].
+										   createInstance(Components.interfaces.nsIFileOutputStream);
+					
+							try {
+								// write, create, truncate
+								foStream.init(file, 0x02 | 0x08 | 0x20, 0666, 0);
+						
+								let str = "";
+								let strRest = "";
+								let tempArr;
+								let bodyBeginingIndex;
+								// Считываем по порциям
+								bodyBeginingIndex = wholeString.search(/(\r?\n){2,}/mg);
 
-							// lets complete MUST HAVE headers: Date, From, To, Resent-from
-							if (newHdrs['Date']==undefined) {
-								let nowDate = new Date();
-								newHdrs['Date'] = "Date: "+nowDate.toString().replace(/^(\w{3})\s(\w{3})\s(\d{2})\s(.*)GMT(.*)$/,"$1, $3 $2 $4$5"); // format date string the way it should be
-							}
-							if (newHdrs['From']==undefined) {
-								newHdrs['From'] = "From: "+msgHdrX.author;
-							}
-							if (newHdrs['To']==undefined) {
-								newHdrs['To'] = "To: "+mimeEncode(options["redirectTo"]);
-							}
-							if (newHdrs['Resent-from']==undefined) {
-								newHdrs['Resent-from'] = "Resent-from: "+msgIdentity.email;
-							}
+								// BODY begining in strRest, extract and proceed the last headers
+								//let newHdrs = new Object(); //Array of created message headers
+								let newHdrs = proceedHeaders(wholeString.substring(0,bodyBeginingIndex));
+
+								// lets complete MUST HAVE headers: Date, From, To, Resent-from
+								if (newHdrs['Date']==undefined) {
+									let nowDate = new Date();
+									newHdrs['Date'] = "Date: "+nowDate.toString().replace(/^(\w{3})\s(\w{3})\s(\d{2})\s(.*)GMT(.*)$/,"$1, $3 $2 $4$5"); // format date string the way it should be
+								}
+								if (newHdrs['From']==undefined) {
+									newHdrs['From'] = "From: "+msgHdrX.author;
+								}
+								if (newHdrs['To']==undefined) {
+									newHdrs['To'] = "To: "+mimeEncode(options["redirectTo"]);
+								}
+								if (newHdrs['Resent-from']==undefined) {
+									newHdrs['Resent-from'] = "Resent-from: "+msgIdentity.email;
+								}
 							
-							// change Reply-To header if option is set
-							if (options['changeReplyToHeader']) {							
-								newHdrs['Reply-To'] = "Reply-To: "+mimeEncode(options['newReplyToHeader']);
-							}
+								// change Reply-To header if option is set
+								if (options['changeReplyToHeader']) {							
+									newHdrs['Reply-To'] = "Reply-To: "+mimeEncode(options['newReplyToHeader']);
+								}
 							
-							// take subject from header because subject in message source may be no actual.
-							// Other filter can change Subject (for example, filtaquilla) but it doesnot concerning message source
-							if (msgHdrX.subject!=undefined) {
-								newHdrs['Subject'] = "Subject: "+msgHdrX.subject;
-							}
-							//consoleService.logStringMessage("newHdrs[Subject]="+newHdrs['Subject']);
+								// take subject from header because subject in message source may be no actual.
+								// Other filter can change Subject (for example, filtaquilla) but it doesnot concerning message source
+								//consoleService.logStringMessage("subject from src newHdrs[Subject]="+newHdrs['Subject']);
+								newHdrs['Subject'] = mergeSubject(newHdrs['Subject'],msgHdrX.subject);
+								//consoleService.logStringMessage("subject merged newHdrs[Subject]="+newHdrs['Subject']);
+								//consoleService.logStringMessage("subject from header var msgHdrX.subject="+msgHdrX.subject);
+								cf.subject = /^Subject:\s(.*)/i.exec(newHdrs['Subject'])[1];
+								//consoleService.logStringMessage("subject var cf.subject="+cf.subject);
+								//if (msgHdrX.subject!=undefined) {
+								//	newHdrs['Subject'] = "Subject: "+msgHdrX.subject;
+								//}
+							
 
-							// lets write headers
-							let newHdrsStr = "";
-							for (let key in newHdrs) {
-								newHdrsStr = newHdrs[key] +"\r\n" + newHdrsStr;
-							}
-							newHdrsStr = handleNewLines(newHdrsStr);
-							foStream.write(newHdrsStr, newHdrsStr.length);
+								// lets write headers
+								let newHdrsStr = "";
+								for (let key in newHdrs) {
+									newHdrsStr = newHdrs[key] +"\r\n" + newHdrsStr;
+								}
+								newHdrsStr = handleNewLines(newHdrsStr);
+								foStream.write(newHdrsStr, newHdrsStr.length);
 
-							// lets handle body
-							let msgBody = handleNewLines(wholeString.substring(bodyBeginingIndex,wholeString.length));
-							foStream.write(msgBody, msgBody.length);
+								// lets handle body
+								let msgBody = handleNewLines(wholeString.substring(bodyBeginingIndex,wholeString.length));
+								foStream.write(msgBody, msgBody.length);
 								
-							// close stream
-							if (foStream instanceof Components.interfaces.nsISafeOutputStream) {
-								foStream.finish();
-							} else {
-								foStream.close();
+								// close stream
+								if (foStream instanceof Components.interfaces.nsISafeOutputStream) {
+									foStream.finish();
+								} else {
+									foStream.close();
+								}
+							} catch (e) {
+								errorCount++;
+								debug(strings["errorCreationMessage"]+":\n"+e);
+								if (x >= aMsgHdrs.length-1) {stopSending();} // if it is the last message in a row
+								return;
 							}
-						} catch (e) {
-							errorCount++;
-							debug(strings["errorCreationMessage"]+":\n"+e);
-							if (x == aMsgHdrs.length) {stopSending();} // if it is the last message in a row
-							return;
-						}
-						//return;
+							//return;
 					
-						// отправляем
+							// отправляем
 						
-						try {
-							//consoleService.logStringMessage("currentlyInQueue=");
-							/*while (!canSendNext) //while queue fo messages is full TODO now, i dont know why, canSendNext is GLOBAL and it meens that we have one queue for all redirection processes
-								threadForWait.processNextEvent(true); // wait
-							canSendNext=false;*/
-							//consoleService.logStringMessage("msgIdentity.email="+msgIdentity.email);
-							//consoleService.logStringMessage("accountKey="+accountKey);
-							//consoleService.logStringMessage("cf.subject="+cf.subject);
-							//consoleService.logStringMessage("msgHdrX.subject="+msgHdrX.subject);
+							try {
+								//consoleService.logStringMessage("currentlyInQueue=");
+								/*while (!canSendNext) //while queue fo messages is full TODO now, i dont know why, canSendNext is GLOBAL and it meens that we have one queue for all redirection processes
+									threadForWait.processNextEvent(true); // wait
+								canSendNext=false;*/
+								//consoleService.logStringMessage("msgIdentity.email="+msgIdentity.email);
+								//consoleService.logStringMessage("accountKey="+accountKey);
+								//consoleService.logStringMessage("cf.subject="+cf.subject);
+								//consoleService.logStringMessage("msgHdrX.subject="+msgHdrX.subject);
 							
-							//consoleService.logStringMessage("file="+file);
-							//msgSend.NotifyListenerOnStopSending(0,null,"",null); 	
-							// start sending message in background TODO create message queue. Now it send all simultaniosly
-							if (x == 0) { //send the first message
-								msgSend = Cc["@mozilla.org/messengercompose/send;1"].createInstance(Ci.nsIMsgSend);
-								msgSend.sendMessageFile(msgIdentity, accountKey, cf, file, true, false, msgSend.nsMsgDeliverNow, null, redRunner.sendListener, null, "");
-							} else { // queue message
-								msgQueue.push({'identity' : msgIdentity, 'accKey' : accountKey, 'cf' : cf, 'file' : file});
+								//consoleService.logStringMessage("file="+file);
+								//msgSend.NotifyListenerOnStopSending(0,null,"",null); 	
+								// start sending message in background TODO create message queue. Now it send all simultaniosly
+								if (x == 0) { //send the first message
+									msgSend = Cc["@mozilla.org/messengercompose/send;1"].createInstance(Ci.nsIMsgSend);
+									msgSend.sendMessageFile(msgIdentity, accountKey, cf, file, true, false, msgSend.nsMsgDeliverNow, null, redRunner.sendListener, null, "");
+								} else { // queue message
+									msgQueue.push({'identity' : msgIdentity, 'accKey' : accountKey, 'cf' : cf, 'file' : file});
+								}
+								//msgSend.sendMessageFile(msgIdentity, accountKey, cf, file, true, false, msgSend.nsMsgDeliverNow, null, redRunner.sendListener, null, "");
+							} catch(e) {
+								errorCount++;
+								debug(strings["errorSendingMessage"]+":\n"+e);
+								//canSendNext=true;
+								//consoleService.logStringMessage("x="+x);
+								//consoleService.logStringMessage("aMsgHdrs.length="+aMsgHdrs.length);
+								if (x >= aMsgHdrs.length-1) {stopSending();} // if it is the last message in a row
+								return;
 							}
-							//msgSend.sendMessageFile(msgIdentity, accountKey, cf, file, true, false, msgSend.nsMsgDeliverNow, null, redRunner.sendListener, null, "");
-						} catch(e) {
-							errorCount++;
-							debug(strings["errorSendingMessage"]+":\n"+e);
-							//canSendNext=true;
-							//consoleService.logStringMessage("i="+i);
-							if (x == aMsgHdrs.length) {stopSending();} // if it is the last message in a row
-							return;
-						}
-						// помечаем сообщение как пересланое TODO на самом деле сообщение отправляется в фоне, поэтому помечать надо в listener-е, который реагирует на завершение отправки, но там почему-то я не могу получить headerы отправленного письма
-						if (options['markAsForwarded']) {
-							msgHdrX.folder.addMessageDispositionState(msgHdrX, Ci.nsIMsgFolder.nsMsgDispositionState_Forwarded);
+							// помечаем сообщение как пересланое TODO на самом деле сообщение отправляется в фоне, поэтому помечать надо в listener-е, который реагирует на завершение отправки, но там почему-то я не могу получить headerы отправленного письма
+							if (options['markAsForwarded']) {
+								msgHdrX.folder.addMessageDispositionState(msgHdrX, Ci.nsIMsgFolder.nsMsgDispositionState_Forwarded);
+							}
+						} finally {
+							if (x >= aMsgHdrs.length-1) {
+								if (aListener) { // now only manual started filters supports async actions, see https://bugzilla.mozilla.org/show_bug.cgi?id=753682
+									//aListener.OnStopCopy(0); // filter is done, see https://developer.mozilla.org/en/XPCOM_Interface_Reference/nsIMsgFilterCustomAction
+									//consoleService.logStringMessage("Creating messages complete");
+								}
+							}
 						}
 					}
 				} (i, msgHdr)
@@ -384,11 +411,11 @@ let redirectRunner = function  () { // redirect action class
 			} catch (e) {
 				errorCount++;
 				debug(strings["errorStreamingSourceMessage"]+":\n"+e)
-				if (i == aMsgHdrs.length-1) {stopSending();} // if it is the last message in a row
+				if (i >= aMsgHdrs.length-1) {stopSending();} // if it is the last message in a row
 				return;
 			}
-			//} (it, aMsgHdrs);		
 		}
+		//consoleService.logStringMessage("Run loop complete");
 	}
 	
 	this.sendListener = { // обработка событий отправки
@@ -572,6 +599,13 @@ let redirectRunner = function  () { // redirect action class
 		//consoleService.logStringMessage("decodedSubject="+decodedSubject);
 		return encodedString;
 	}
+	
+	let mergeSubject = function (subj1, subj2) { // subj1 from message source may not contain changes from other filter actions, subj2 from nsIMsgDBHdr doesnt contain Re: prefix (why?), so, we have to merge it
+		if (/^subject:\sre:\s/i.test(subj1) && !/^re:\s/i.test(subj2))
+			return /^Subject:\s(Re:\s)+/i.exec(subj1)[0]+subj2;
+		else
+			return 'Subject: '+subj2;
+	}
 }
 
 //############### redirectListener ##################
@@ -620,12 +654,15 @@ let redirectListener = function  () { // it listen for users called filter actio
 
 		allowDuplicates: true,
 		needsBody: false,
+		//isAsync: true,
 	}
+	//this.logfilter = {id: "redirectfilter@irkit.ru#log",name: "Log to error console",apply: function(aMsgHdrs, aActionValue, aListener, aType, aMsgWindow) {let consoleService = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService);consoleService.logStringMessage("!!!!!!!!!!!!NEXT FILTER!!!!!!!!!");}, isValidForType: function(type, scope) {return true;}, validateActionValue: function(value, folder, type){return null;},allowDuplicates: true,needsBody: false,}
 	this.start = function() {
 		// add filter action to filter action list
 		let filterService = Cc["@mozilla.org/messenger/services/filters;1"]
 								.getService(Ci.nsIMsgFilterService);
 		filterService.addCustomAction(this.filter);
+		//filterService.addCustomAction(this.logfilter);
 	}
 }
 
