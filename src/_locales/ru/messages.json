@@ -1,0 +1,10 @@
+{
+
+  "extensionName": {
+    "message": "RedirectFilter"
+  },
+  "extensionDescription": {
+    "message": "Действие перенаправить в фильтрах сообщений."
+  }
+
+}

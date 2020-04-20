@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "__MSG_extensionName__",
+	"description": "__MSG_extensionDescription__",
+  "applications": {
+    "gecko": {
+      "id": "redirectfilter@irkit.ru",
+      "strict_min_version": "68.0"
+    }
+  },
+  "version": "0.1.9b1",
+  "default_locale": "en",
+  "author": "Dugite-Code",
+  "homepage_url": "https://github.com/TB-throwback/RedirectFilter",
+  "legacy": {
+    "options": {
+      "page": "chrome://redirectfilter/content/options.xul",
+      "open_in_tab": false
+    }
+  }
+}

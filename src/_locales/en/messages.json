@@ -1,0 +1,10 @@
+{
+
+  "extensionName": {
+    "message": "RedirectFilter"
+  },
+  "extensionDescription": {
+    "message": "Redirect action in the filters."
+  }
+
+}
